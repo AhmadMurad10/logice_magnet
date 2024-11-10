@@ -52,39 +52,53 @@ class Board:
             self.apply_repulsion(to_x, to_y)
 
         if stone.type == "redd":
-            print("ssssssssssssssssss")
+            # print("ssssssssssssssssss")
             self.apply_attraction(to_x, to_y)
 
-        if self.check_win():
-            print("You won the level!")
-            print("Moves you made:")
-            for move in self.moves:
-                print(f"From {move[0]} to {move[1]}")
+        # if self.check_win():
+            # print("You won the level!")
+            # print("Moves you made:")
+            # for move in self.moves:
+                # print(f"From {move[0]} to {move[1]}")
 
-    def apply_repulsion(self, x, y):  
+    def apply_repulsion(self, x, y):
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
         for dx, dy in directions:
             nx, ny = x + dx, y + dy
             stones_to_move = []
 
             while 0 <= nx < self.h and 0 <= ny < self.w:
                 neighbor_cell = self.grid[nx][ny]
-                
+
                 if not neighbor_cell.empty and neighbor_cell.stone and neighbor_cell.stone.type in ["iron", "redd"]:
-                    stones_to_move.append((nx, ny))
+                    stones_to_move.append((nx, ny))  
                 elif neighbor_cell.empty:
-                    stones_to_move.append((nx, ny))
+                    stones_to_move.append((nx, ny))  
+                    break  
                 else:
                     break  
+
                 nx += dx
                 ny += dy
 
-            for i in range(len(stones_to_move) - 1, 0, -1):
-                src_x, src_y = stones_to_move[i - 1]
-                dest_x, dest_y = stones_to_move[i]
-                if self.grid[dest_x][dest_y].empty:
+            if len(stones_to_move) > 1:
+                for i in range(len(stones_to_move) - 1, 0, -1):
+                    src_x, src_y = stones_to_move[i - 1]
+                    dest_x, dest_y = stones_to_move[i]
+
+                    if self.grid[dest_x][dest_y].empty:
+                        self.grid[dest_x][dest_y].place(self.grid[src_x][src_y].stone)
+                        self.grid[src_x][src_y].remove()
+
+            elif len(stones_to_move) == 1:
+                src_x, src_y = stones_to_move[0]
+                dest_x, dest_y = nx, ny
+
+                if 0 <= dest_x < self.h and 0 <= dest_y < self.w and self.grid[dest_x][dest_y].empty:
                     self.grid[dest_x][dest_y].place(self.grid[src_x][src_y].stone)
                     self.grid[src_x][src_y].remove()
+
     
     def apply_attraction(self, x, y):  
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
@@ -124,3 +138,6 @@ class Board:
         for row in self.grid:
             print(" | ".join(str(cell) for cell in row))
             print("-" * (self.w * 20))
+
+
+

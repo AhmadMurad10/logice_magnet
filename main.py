@@ -1,27 +1,38 @@
 from board import Board
 from stone import Stone
+from ALGO import Algorithm
 
-
-attempts_per_level = [5, 5, 5, 2, 2,1,1]
+attempts_per_level = [1,5, 5, 5, 2, 2,1,1,2,5,2]
 levels = [
+    {
+        'size': 3,
+        'targets': [(0, 1)],
+        'blockes': [(2,0),(2,1),(2,2)],
+        'stones': [(0, 0, "iron"), (1, 0, "redd")]
+    },
+   
     {
         'size': 4,
         'targets': [(1, 1), (1, 3)],
+        'blockes': [],
         'stones': [(1, 2, "iron"), (2, 0, "blue")]
     },
     {
         'size': 5,
         'targets': [(0, 2), (2, 2), (2, 0), (2, 4), (4, 2)],
+        'blockes': [],
         'stones': [(1, 2, "iron"), (2, 1, "iron"), (3, 2, "iron"), (2, 3, "iron"), (4, 0, "blue")]
     },
     {
         'size': 4,
         'targets': [(0, 3), (2, 3)],
+        'blockes': [(0,0),(0,1),(0,2)],
         'stones': [(1, 2, "iron"), (2, 0, "blue")]
     },
     {
         'size': 5,
         'targets': [(0, 0), (0, 2), (4, 1)],
+        'blockes': [],
         'stones': [(1, 1, "iron"), (3, 1, "iron"), (2, 0, "blue")]
     },
     {
@@ -41,7 +52,26 @@ levels = [
         'targets': [(1, 0),(2,0),(4,0),(4,2)],
         'blockes': [(0,2), (0,3), (1,2), (1,3)],
         'stones': [(0, 0, "iron"), (1, 0, "iron"),(4,3, "iron"),(3,1, "redd")]
-    }
+    },
+     {
+        'size': 4,
+        'targets': [(0, 0),(0,2),(2,2)],
+        'blockes': [],
+        'stones': [(1, 1, "iron"), (1, 2, "iron"),(2,0, "blue")]
+    },
+      {
+        'size': 7,
+        'targets': [(0, 1),(0,3),(0,6)],
+        'blockes': [],
+        'stones': [(0,3, "iron"), (0,5, "iron"),(0,0, "blue")]
+    },
+      {
+        'size': 4,
+        'targets': [(1, 1),(1,3),(3,0),(3,3)],
+        'blockes': [],
+        'stones': [(2,2, "iron"), (2,3, "iron"),(3,1, "iron"),(0,0, "blue")]
+    },
+     
 ]
 
 def setup_level(level_index):
@@ -53,8 +83,8 @@ def setup_level(level_index):
     for target in level['targets']:
         board.set_type(*target, "target")
         
-    for target in level['blockes']:
-        board.set_type(*target, "blocke")
+    for blocke in level['blockes']:
+        board.set_type(*blocke, "blocke")
  
     for stone in level['stones']:
         x, y, stone_type = stone
@@ -110,7 +140,7 @@ def play_level(level_index):
     print("You have run out of attempts. Unfortunately, you lost this level.")
 
 while True:
-    print("Choose a level (1-) or 'q' to quit:")
+    print("Choose a level or 'q' to quit:")
     for i in range(1, len(attempts_per_level) + 1):
         print(f"Level {i}: {attempts_per_level[i - 1]} attempts")
     
@@ -122,10 +152,14 @@ while True:
     try:
         level_index = int(level_choice) - 1
         if 0 <= level_index < len(attempts_per_level):
-            play_level(level_index)
+           initial_board = setup_level(level_index)
+           Algorithm.BFS(initial_board)
+        #    Algorithm.DFS(initial_board)
+        #    play_level(level_index)
         else:
             print("Invalid choice, please choose a valid number.")
     except ValueError:
         print("Please enter a valid number.")
+
 
 
