@@ -2,15 +2,8 @@ from board import Board
 from stone import Stone
 from ALGO import Algorithm
 
-attempts_per_level = [1,5, 5, 5, 2, 2,1,1,2,5,2]
+attempts_per_level = [5, 5, 5, 2, 2,1,1,2,5,2]
 levels = [
-    {
-        'size': 3,
-        'targets': [(0, 1)],
-        'blockes': [(2,0),(2,1),(2,2)],
-        'stones': [(0, 0, "iron"), (1, 0, "redd")]
-    },
-   
     {
         'size': 4,
         'targets': [(1, 1), (1, 3)],
@@ -152,14 +145,30 @@ while True:
     try:
         level_index = int(level_choice) - 1
         if 0 <= level_index < len(attempts_per_level):
-           initial_board = setup_level(level_index)
-           Algorithm.BFS(initial_board)
-        #    Algorithm.DFS(initial_board)
-        #    play_level(level_index)
+            initial_board = setup_level(level_index)
+            
+            print("\nChoose the solving method:")
+            print("1. Breadth-First Search (BFS)")
+            print("2. Depth-First Search (DFS)")
+            print("3. Uniform Cost Search (UCS)")
+            print("4. Play manually")
+            solving_choice = input("Your choice: ")
+            
+            if solving_choice == '1':
+                print("\nUsing Breadth-First Search (BFS):")
+                Algorithm.BFS(initial_board)
+            elif solving_choice == '2':
+                print("\nUsing Depth-First Search (DFS):")
+                Algorithm.DFS(initial_board)
+            elif solving_choice == '3':
+                print("\nUsing Uniform Cost Search (UCS):")
+                Algorithm.UCS(initial_board)
+            elif solving_choice == '4':
+                print("\nSwitching to manual play mode:")
+                play_level(level_index)
+            else:
+                print("Invalid choice, please select a valid solving method.")
         else:
-            print("Invalid choice, please choose a valid number.")
+            print("Invalid choice, please choose a valid level number.")
     except ValueError:
         print("Please enter a valid number.")
-
-
-

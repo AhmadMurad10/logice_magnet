@@ -23,43 +23,38 @@ class Board:
             print("Invalid cell coordinates")
 
     def move_stone(self, from_x, from_y, to_x, to_y):
-        
-        if not (0 <= from_x < self.h and 0 <= from_y < self.w):
-            print("Invalid source cell coordinates")
-            return
-        if not (0 <= to_x < self.h and 0 <= to_y < self.w):
-            print("Invalid destination cell coordinates")
-            return
+            if not (0 <= from_x < self.h and 0 <= from_y < self.w):
+                print("Invalid source cell coordinates")
+                return
+            if not (0 <= to_x < self.h and 0 <= to_y < self.w):
+                print("Invalid destination cell coordinates")
+                return
 
-        from_cell = self.grid[from_x][from_y]
-        to_cell = self.grid[to_x][to_y]
+            from_cell = self.grid[from_x][from_y]
+            to_cell = self.grid[to_x][to_y]
 
-        if from_cell.empty or from_cell.stone.type not in ["blue", "redd"]:  
-            print("Only blue and red magnets can be moved.")
-            return
+            if from_cell.empty or from_cell.stone.type not in ["blue", "redd"]:
+                print("Only blue and red magnets can be moved.")
+                return
 
-        if not to_cell.empty and to_cell.type != "target":
-            print("Destination cell is either occupied or blocked")
-            return
- 
-        stone = from_cell.stone  
-        to_cell.place(stone)
-        from_cell.remove()  
+            if to_cell.type == "blocke":
+                print("Cannot move to a blocked cell.")
+                return
+            if not to_cell.empty and to_cell.type != "target":
+                print("Destination cell is either occupied or blocked.")
+                return
 
-        self.moves.append(((from_x, from_y), (to_x, to_y)))
+            stone = from_cell.stone
+            to_cell.place(stone)
+            from_cell.remove()
 
-        if stone.type == "blue":
-            self.apply_repulsion(to_x, to_y)
+            self.moves.append(((from_x, from_y), (to_x, to_y)))
 
-        if stone.type == "redd":
-            # print("ssssssssssssssssss")
-            self.apply_attraction(to_x, to_y)
+            if stone.type == "blue":
+                self.apply_repulsion(to_x, to_y)
 
-        # if self.check_win():
-            # print("You won the level!")
-            # print("Moves you made:")
-            # for move in self.moves:
-                # print(f"From {move[0]} to {move[1]}")
+            if stone.type == "redd":
+                self.apply_attraction(to_x, to_y)
 
     def apply_repulsion(self, x, y):
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
@@ -98,7 +93,6 @@ class Board:
                 if 0 <= dest_x < self.h and 0 <= dest_y < self.w and self.grid[dest_x][dest_y].empty:
                     self.grid[dest_x][dest_y].place(self.grid[src_x][src_y].stone)
                     self.grid[src_x][src_y].remove()
-
     
     def apply_attraction(self, x, y):  
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
